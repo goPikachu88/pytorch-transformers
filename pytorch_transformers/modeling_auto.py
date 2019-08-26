@@ -24,10 +24,10 @@ from torch.nn import CrossEntropyLoss, MSELoss
 from torch.nn.parameter import Parameter
 
 from .modeling_bert import BertConfig, BertModel
-from .modeling_openai import OpenAIGPTConfig, OpenAIGPTModel
-from .modeling_gpt2 import GPT2Config, GPT2Model
+# from .modeling_openai import OpenAIGPTConfig, OpenAIGPTModel
+# from .modeling_gpt2 import GPT2Config, GPT2Model
 from .modeling_transfo_xl import TransfoXLConfig, TransfoXLModel
-from .modeling_xlnet import XLNetConfig, XLNetModel
+# from .modeling_xlnet import XLNetConfig, XLNetModel
 from .modeling_xlm import XLMConfig, XLMModel
 from .modeling_roberta import RobertaConfig, RobertaModel
 
@@ -114,14 +114,14 @@ class AutoConfig(object):
             return RobertaConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
         elif 'bert' in pretrained_model_name_or_path:
             return BertConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
-        elif 'openai-gpt' in pretrained_model_name_or_path:
-            return OpenAIGPTConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
-        elif 'gpt2' in pretrained_model_name_or_path:
-            return GPT2Config.from_pretrained(pretrained_model_name_or_path, **kwargs)
+        # elif 'openai-gpt' in pretrained_model_name_or_path:
+        #     return OpenAIGPTConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
+        # elif 'gpt2' in pretrained_model_name_or_path:
+        #     return GPT2Config.from_pretrained(pretrained_model_name_or_path, **kwargs)
         elif 'transfo-xl' in pretrained_model_name_or_path:
             return TransfoXLConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
-        elif 'xlnet' in pretrained_model_name_or_path:
-            return XLNetConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
+        # elif 'xlnet' in pretrained_model_name_or_path:
+        #     return XLNetConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
         elif 'xlm' in pretrained_model_name_or_path:
             return XLMConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
 
@@ -229,14 +229,14 @@ class AutoModel(object):
             return RobertaModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
         elif 'bert' in pretrained_model_name_or_path:
             return BertModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
-        elif 'openai-gpt' in pretrained_model_name_or_path:
-            return OpenAIGPTModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
-        elif 'gpt2' in pretrained_model_name_or_path:
-            return GPT2Model.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
+        # elif 'openai-gpt' in pretrained_model_name_or_path:
+        #     return OpenAIGPTModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
+        # elif 'gpt2' in pretrained_model_name_or_path:
+        #     return GPT2Model.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
         elif 'transfo-xl' in pretrained_model_name_or_path:
             return TransfoXLModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
-        elif 'xlnet' in pretrained_model_name_or_path:
-            return XLNetModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
+        # elif 'xlnet' in pretrained_model_name_or_path:
+        #     return XLNetModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
         elif 'xlm' in pretrained_model_name_or_path:
             return XLMModel.from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
 
