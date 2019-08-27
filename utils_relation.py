@@ -20,11 +20,9 @@ from __future__ import absolute_import, division, print_function
 import csv
 import logging
 import os
-import sys
 import json
 from io import open
 
-from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import precision_score, recall_score, f1_score
 
 logger = logging.getLogger(__name__)
@@ -77,7 +75,7 @@ class TACREDProcessor(object):
         logger.info("LOOKING AT {}".format(
             os.path.join(data_dir, "train.json")))
         return self._create_examples(
-            self._read_json(os.path.join(data_dir, "train_10000.json")), "train")
+            self._read_json(os.path.join(data_dir, "train.json")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
@@ -130,7 +128,8 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         `cls_token_segment_id` define the segment id associated to the CLS token (0 for BERT, 2 for XLNet)
     """
 
-    label_map = {label: i for i, label in enumerate(label_list)}
+    # label_map = {label: i for i, label in enumerate(label_list)}
+    label_map = LABEL_TO_ID
 
     features = []
     for (ex_index, example) in enumerate(examples):
@@ -199,8 +198,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
         padding_length = max_seq_length - len(input_ids)
         if pad_on_left:
             input_ids = ([pad_token] * padding_length) + input_ids
-            input_mask = ([0 if mask_padding_with_zero else 1]
-                          * padding_length) + input_mask
+            input_mask = ([0 if mask_padding_with_zero else 1] * padding_length) + input_mask
             segment_ids = ([pad_token_segment_id] *
                            padding_length) + segment_ids
         else:
@@ -291,7 +289,7 @@ def acc_and_f1(preds, labels, label_map):
 def compute_metrics(task_name, preds, labels):
     assert len(preds) == len(labels)
     if task_name == "tacred":
-        return acc_and_f1(preds, labels)
+        return acc_and_f1(preds, labels, LABEL_TO_ID)
     else:
         raise KeyError(task_name)
 
