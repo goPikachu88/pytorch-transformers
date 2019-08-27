@@ -37,11 +37,10 @@ from pytorch_transformers import (WEIGHTS_NAME,
 
 from pytorch_transformers import AdamW, WarmupLinearSchedule
 
-
-from pytorch_transformers import AdamW, WarmupLinearSchedule
-
 from utils_relation import (compute_metrics, convert_examples_to_features,
                             output_modes, processors)
+
+from utils_relation import LABEL_TO_ID
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +50,8 @@ MODEL_CLASSES = {
     'bert': (BertConfig, BertForSequenceClassification, BertTokenizer),
     'roberta': (RobertaConfig, RobertaForSequenceClassification, RobertaTokenizer),
 }
+
+ID2LABEL = dict((v, k) for k, v in LABEL_TO_ID.items())
 
 
 def set_seed(args):
@@ -230,6 +231,14 @@ def evaluate(args, model, tokenizer, prefix=""):
     result = compute_metrics(args.task_name, preds, out_label_ids)
     results.update(result)
 
+    # Save predicts
+    if args.save_predict:
+        output_pred_file = "preds_test.txt" if args.do_test else "preds_dev.txt"
+        with open(os.path.join(args.output_dir, output_pred_file), 'w') as writer:
+            for _pred in preds:
+                writer.write("%s\n" % ID2LABEL[_pred])
+        logger.info("Saving predicted results to {}/{}".format(args.output_dir, output_pred_file))
+
     # Write eval results to file
     output_eval_file = "eval_results_test.txt" if args.do_test else "eval_results_dev.txt"
     if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
@@ -342,7 +351,8 @@ def parse_args():
                         help="Rul evaluation during training at each logging step.")
     parser.add_argument("--do_lower_case", action='store_true',
                         help="Set this flag if you are using an uncased model.")
-
+    parser.add_argument("--save_predict", action='store_true',
+                        help="Whether to save predicted results when evaluation.")
     parser.add_argument("--per_gpu_train_batch_size", default=8, type=int,
                         help="Batch size per GPU/CPU for training.")
     parser.add_argument("--per_gpu_eval_batch_size", default=8, type=int,
@@ -497,7 +507,7 @@ def main():
     if args.do_eval and args.do_test:
         raise ValueError("Can't evaluate dev and test set in one run! Please set args.do_eval OR args.do_test.")
 
-    if (args.do_eval or args.do_test ) and args.local_rank in [-1, 0]:
+    if (args.do_eval or args.do_test) and args.local_rank in [-1, 0]:
         checkpoints = [args.output_dir]
 
         if args.eval_all_checkpoints:
